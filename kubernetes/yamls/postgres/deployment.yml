@@ -26,6 +26,4 @@ spec:
               name: pg-data
       volumes:
         - name: pg-data
-          gcePersistentDisk:
-            pdName: nextgen-data-disk
-            fsType: ext4
+          emptyDir: {}

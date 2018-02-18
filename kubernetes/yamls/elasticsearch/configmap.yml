@@ -6,6 +6,7 @@ data:
   NODE_DATA: "true"
   HTTP_ENABLE: "true"
   ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+  NETWORK_HOST: "_local_"
 kind: ConfigMap
 metadata:
   namespace: elasticsearch
