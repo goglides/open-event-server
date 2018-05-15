@@ -23,7 +23,7 @@ spec:
         args: ["./kubernetes/run.sh"]
         livenessProbe:
           httpGet:
-            path: /health-check/
+            path: /health-check
             port: 8080
           initialDelaySeconds: 30
           timeoutSeconds: 3
