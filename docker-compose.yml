@@ -32,14 +32,14 @@ services:
       DATABASE_URL: postgresql://postgres:test@postgres:5432/opev
       REDIS_URL: redis://redis:6379/0
       C_FORCE_ROOT: "true"
-      SERVER_NAME: $SERVER_NAME
+      SERVER_NAME: localhost:8085
     links:
       - postgres:postgres
       - redis:redis
     volumes:
       - 'storage:/open_event/static'
     ports:
-      - '80:5000'
+      - '8085:5000'
 
 volumes:
   redis:
