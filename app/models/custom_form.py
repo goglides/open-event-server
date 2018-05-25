@@ -1,7 +1,7 @@
 import json
+from sqlalchemy.schema import UniqueConstraint
 
 from app.models import db
-from sqlalchemy.schema import UniqueConstraint
 
 SESSION_FORM = {
     "title": {"include": 1, "require": 1},
@@ -71,10 +71,7 @@ class CustomForms(db.Model):
         return '<CustomForm %r>' % self.id
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return 'CustomForm %r' % self.id
+        return self.__repr__()
 
     @property
     def serialize(self):

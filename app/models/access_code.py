@@ -59,10 +59,7 @@ class AccessCode(db.Model):
         return '<AccessCode %r>' % self.id
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.code
+        return self.__repr__()
 
     @property
     def serialize(self):

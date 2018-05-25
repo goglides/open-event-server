@@ -1,25 +1,27 @@
-from datetime import datetime
-import pytz
 import random
+from datetime import datetime
+
 import humanize
+import pytz
 from flask import url_for
+from flask_scrypt import generate_password_hash, generate_random_salt
 from sqlalchemy import event, desc
-from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
-from flask.ext.scrypt import generate_password_hash, generate_random_salt
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+
 from app.api.helpers.db import get_count
-from app.models.session import Session
-from app.models.speaker import Speaker
 from app.models import db
+from app.models.custom_system_role import UserSystemRole
+from app.models.helpers.versioning import clean_up_string, clean_html
 from app.models.notification import Notification
+from app.models.panel_permission import PanelPermission
 from app.models.permission import Permission
 from app.models.role import Role
 from app.models.service import Service
-from app.models.custom_system_role import UserSystemRole
+from app.models.session import Session
+from app.models.speaker import Speaker
 from app.models.user_permission import UserPermission
 from app.models.users_events_role import UsersEventsRoles as UER
-from app.models.panel_permission import PanelPermission
-from app.models.helpers.versioning import clean_up_string, clean_html
 
 # System-wide
 ADMIN = 'admin'
@@ -89,8 +91,8 @@ class User(db.Model):
         :param password:
         :return:
         """
-        salt = generate_random_salt()
-        self._password = generate_password_hash(password, salt)
+        salt = str(generate_random_salt(), 'utf-8')
+        self._password = str(generate_password_hash(password, salt), 'utf-8')
         hash_ = random.getrandbits(128)
         self.reset_password = str(hash_)
         self.salt = salt
@@ -192,7 +194,7 @@ class User(db.Model):
             'update': 'can_update',
             'delete': 'can_delete',
         }
-        if operation not in operations.keys():
+        if operation not in list(operations.keys()):
             raise ValueError('No such operation defined')
 
         try:
@@ -270,7 +272,7 @@ class User(db.Model):
 
     def is_correct_password(self, password):
         salt = self.salt
-        password = generate_password_hash(password, salt)
+        password = str(generate_password_hash(password, salt), 'utf-8')
         if password == self._password:
             return True
         return False
@@ -344,7 +346,7 @@ class User(db.Model):
         firstname = self.first_name if self.first_name else ''
         lastname = self.last_name if self.last_name else ''
         if firstname and lastname:
-            return u'{} {}'.format(firstname, lastname)
+            return '{} {}'.format(firstname, lastname)
         else:
             return ''
 
@@ -352,10 +354,7 @@ class User(db.Model):
         return '<User %r>' % self.email
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.email
+        return self.__repr__()
 
     def __setattr__(self, name, value):
         if name == 'details':

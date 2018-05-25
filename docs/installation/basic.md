@@ -2,29 +2,11 @@
 
 ## Dependencies required to run Orga Server
 
-* Python 2
+* Python 3
 * Postgres
 ```sh
 sudo apt-get update
 sudo apt-get install postgresql postgresql-contrib
-```
-* NodeJS
-if nvm(Node Version Manager)  is not installed:
-using cURL:
-```sh
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
-```
-or Wget:
-```sh
-wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
-```
-run nvm after exporting NVM_DIR:
-```sh
-. "$NVM_DIR/nvm.sh"
-```
-Node installation, v6.9.1 is LTS, though you can install other versions as well:
-```sh
-nvm install 6.9.1
 ```
 
 ## Steps
@@ -34,10 +16,10 @@ Make sure you have the dependencies mentioned above installed before proceeding 
 Run the commands mentioned below with the terminal active in the project's root directory.
 
 
-* **Step 1** - Install python requirements.
+* **Step 1** - Install Python 3 requirements.
 
 ```sh
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 
@@ -50,30 +32,37 @@ sudo -u postgres psql
 * When inside psql, create a user for open-event and then using the user create the database.
 
 ```sql
-create user open_event_user with password 'test';
-create database test with owner=open_event_user;
+CREATE USER john WITH PASSWORD 'start';
+CREATE DATABASE oevent WITH OWNER john;
 ```
 
 * Once database is created, exit the psql shell with `\q` followed by ENTER.
 
 
-* **Step 3** - Start the postgres service.
+* **Step 3** - Create application environment variables.
+
+```sh
+cp .env.example .env
+```
+
+
+* **Step 4** - Start the postgres service.
 
 ```sh
 sudo service postgresql restart
 ```
 
 
-* **Step 4** - Create the tables. For that we will use `create_db.py`.
+* **Step 5** - Create the tables. For that we will use `create_db.py`.
 
 ```sh
-python create_db.py
+python3 create_db.py
 # enter email and password
-python manage.py db stamp head
+python3 manage.py db stamp head
 ```
 
 
-* **Step 5** - Start the application along with the needed services.
+* **Step 6** - Start the application along with the needed services.
 The `&` at the end of the commands below make them run in background so that they don't hold the terminal.
 
 ```sh
@@ -95,7 +84,7 @@ celery worker -A app.celery &
 unset INTEGRATE_SOCKETIO
 
 # run app
-python manage.py runserver
+python3 manage.py runserver
 ```
 
-* **Step 6** - Rejoice. Go to `localhost:5000` in your web browser to see the application live.
+* **Step 7** - Rejoice. Go to `localhost:5000` in your web browser to see the application live.

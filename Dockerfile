@@ -1,4 +1,4 @@
-FROM python:2-slim
+FROM python:3.6-slim
 LABEL maintainer="Niranjan Rajendran <me@niranjan.io>"
 
 ENV INSTALL_PATH /open_event
@@ -19,6 +19,7 @@ COPY requirements requirements
 
 # install requirements
 RUN pip install --no-cache-dir -r requirements.txt 
+RUN pip install eventlet
 
 # copy remaining files
 COPY . .

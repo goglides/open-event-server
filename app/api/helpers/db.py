@@ -1,13 +1,14 @@
-# ONLY INCLUDE THOSE DB HELPERS WHICH ARE NOT SPECIFIC TO ANY MODEL
-
 import logging
 import traceback
 
+from flask_rest_jsonapi.exceptions import ObjectNotFound
 from sqlalchemy import func
+from sqlalchemy.orm.exc import NoResultFound
 
 from app.models import db
-from sqlalchemy.orm.exc import NoResultFound
-from flask_rest_jsonapi.exceptions import ObjectNotFound
+
+
+# ONLY INCLUDE THOSE DB HELPERS WHICH ARE NOT SPECIFIC TO ANY MODEL
 
 
 def save_to_db(item, msg="Saved to db", print_error=True):

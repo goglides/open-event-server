@@ -1,5 +1,4 @@
 from app.models import db
-
 from app.models.panel_permission import PanelPermission
 
 
@@ -26,10 +25,7 @@ class CustomSysRole(db.Model):
         return '<CustomSysRole %r>' % self.name
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.name
+        return self.__repr__()
 
 
 class UserSystemRole(db.Model):
@@ -49,7 +45,4 @@ class UserSystemRole(db.Model):
         self.role = role
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
         return '%r as %r' % (self.user, self.role)

@@ -7,12 +7,14 @@ import magic
 from boto.gs.connection import GSConnection
 from boto.s3.connection import S3Connection, OrdinaryCallingFormat
 from boto.s3.key import Key
-from flask_scrypt import generate_password_hash
-from werkzeug.utils import secure_filename
 from flask import current_app as app, request
-from urlparse import urlparse
+from flask_scrypt import generate_password_hash
+from urllib.parse import urlparse
+from werkzeug.utils import secure_filename
 
 from app.settings import get_settings
+
+SCHEMES = {80: 'http', 443: 'https'}
 
 #################
 # STORAGE SCHEMA
@@ -161,8 +163,22 @@ def upload_local(uploaded_file, key, **kwargs):
     if get_settings()['static_domain']:
         return get_settings()['static_domain'] + \
             file_relative_path.replace('/static', '')
-    url = urlparse(request.url)
-    return url.scheme + '://' + url.hostname + file_relative_path
+
+    return create_url(request.url, file_relative_path)
+
+
+def create_url(request_url, file_relative_path):
+    """Generates the URL of an uploaded file."""
+    url = urlparse(request_url)
+
+    # No need to specify scheme-corresponding port
+    port = url.port
+    if port and url.scheme == SCHEMES.get(url.port, None):
+        port = None
+
+    return '{scheme}://{hostname}:{port}{file_relative_path}'.format(
+        scheme=url.scheme, hostname=url.hostname, port=port,
+        file_relative_path=file_relative_path).replace(':None', '')
 
 
 def upload_to_aws(bucket_name, aws_region, aws_key, aws_secret, file, key, acl='public-read'):
@@ -249,4 +265,4 @@ def generate_hash(key):
     Generate hash for key
     """
     phash = generate_password_hash(key, get_settings()['secret'])
-    return b64encode(phash)[:10]  # limit len to 10, is sufficient
+    return str(b64encode(phash), 'utf-8')[:10]  # limit len to 10, is sufficient

@@ -1,26 +1,27 @@
 import binascii
 import os
-import pytz
-import flask_login as login
 from datetime import datetime
-from sqlalchemy import event
+
+import flask_login as login
+import pytz
 from flask import current_app
+from sqlalchemy import event
 
 from app.api.helpers.db import get_count
-from app.models.helpers.versioning import clean_up_string, clean_html
-from app.models.email_notification import EmailNotification
-from app.models.user import ATTENDEE, ORGANIZER
 from app.models import db
+from app.models.email_notification import EmailNotification
+from app.models.helpers.versioning import clean_up_string, clean_html
+from app.models.user import ATTENDEE, ORGANIZER
 from app.views.redis_store import redis_store
 
 
 def get_new_event_identifier(length=8):
-    identifier = binascii.b2a_hex(os.urandom(length / 2))
+    identifier = str(binascii.b2a_hex(os.urandom(int(length / 2))), 'utf-8')
     count = get_count(Event.query.filter_by(identifier=identifier))
     if count == 0:
         return identifier
     else:
-        return get_new_event_identifier()
+        return get_new_event_identifier(length)
 
 
 class Event(db.Model):
@@ -253,10 +254,7 @@ class Event(db.Model):
         return '<Event %r>' % self.name
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.name
+        return self.__repr__()
 
     def __setattr__(self, name, value):
         if name == 'organizer_description' or name == 'description' or name == 'code_of_conduct':

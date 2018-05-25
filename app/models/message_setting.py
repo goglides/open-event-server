@@ -31,10 +31,7 @@ class MessageSettings(db.Model):
         return '<Message Setting %r >' % self.action
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return 'Message Setting %r' % self.action
+        return self.__repr__()
 
     @property
     def serialize(self):

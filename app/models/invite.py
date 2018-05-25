@@ -22,10 +22,7 @@ class Invite(db.Model):
         return '<Invite %r>' % self.user_id
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return 'Invite for %s' % self.session
+        return self.__repr__()
 
     @property
     def serialize(self):

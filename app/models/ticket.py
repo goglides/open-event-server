@@ -1,5 +1,5 @@
-from app.models.order import OrderTicket, Order
 from app.models import db
+from app.models.order import OrderTicket, Order
 
 access_codes_tickets = db.Table('access_codes_tickets',
                                 db.Column('access_code_id', db.Integer, db.ForeignKey(
@@ -114,10 +114,7 @@ class Ticket(db.Model):
         return '<Ticket %r>' % self.name
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.name
+        return self.__repr__()
 
     @property
     def serialize(self):
@@ -172,7 +169,4 @@ class TicketTag(db.Model):
         return '<TicketTag %r>' % self.name
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.name
+        return self.__repr__()

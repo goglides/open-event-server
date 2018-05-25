@@ -31,6 +31,12 @@ class AttendeeListPost(ResourceList):
         """
         require_relationship(['ticket', 'event'], data)
 
+        ticket = db.session.query(Ticket).filter_by(id=int(data['ticket'])).first()
+        if ticket is None:
+            raise UnprocessableEntity({'pointer': '/data/relationships/ticket'}, "Invalid Ticket")
+        if ticket.event_id != int(data['event']):
+            raise UnprocessableEntity({'pointer': '/data/relationships/ticket'}, "Ticket belongs to a different Event")
+
     decorators = (jwt_required,)
     methods = ['POST']
     schema = AttendeeSchema
@@ -65,7 +71,7 @@ class AttendeeList(ResourceList):
 
         if view_kwargs.get('user_id'):
             user = safe_query(self, User, 'id', view_kwargs['user_id'], 'user_id')
-            if not has_access('is_user_itself', id=user.id):
+            if not has_access('is_user_itself', user_id=user.id):
                 raise ForbiddenException({'source': ''}, 'Access Forbidden')
             query_ = query_.join(User, User.email == TicketHolder.email).filter(User.id == user.id)
 

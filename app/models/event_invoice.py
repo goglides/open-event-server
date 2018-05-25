@@ -105,7 +105,4 @@ class EventInvoice(db.Model):
         return '<EventInvoice %r>' % self.invoice_pdf_url
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.invoice_pdf_url
+        return self.__repr__()

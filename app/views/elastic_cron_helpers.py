@@ -1,11 +1,12 @@
-# WARNING: This file contains cron jobs for elasticsearch, please use pure python for any kind of operation here,
-# Objects requiring flask app context may not work properly
-
+import psycopg2
 from elasticsearch import helpers, Elasticsearch
+
+from app.views.celery_ import celery
 from app.views.redis_store import redis_store
 from config import Config
-from app.views.celery_ import celery
-import psycopg2
+
+# WARNING: This file contains cron jobs for elasticsearch, please use pure python for any kind of operation here,
+# Objects requiring flask app context may not work properly
 
 es_store = Elasticsearch([Config.ELASTICSEARCH_HOST])
 conn = psycopg2.connect(Config.SQLALCHEMY_DATABASE_URI)
@@ -52,7 +53,7 @@ class EventIterator:
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self.current >= self.high:
             raise StopIteration
         else:

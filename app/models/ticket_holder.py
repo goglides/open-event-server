@@ -1,5 +1,5 @@
 import base64
-from StringIO import StringIO
+from io import StringIO
 
 import qrcode
 
@@ -11,7 +11,7 @@ class TicketHolder(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String, nullable=False)
-    lastname = db.Column(db.String)
+    lastname = db.Column(db.String, nullable=False)
     email = db.Column(db.String)
     address = db.Column(db.String)
     city = db.Column(db.String)
@@ -33,7 +33,7 @@ class TicketHolder(db.Model):
     github = db.Column(db.String)
     gender = db.Column(db.String)
     birth_date = db.Column(db.DateTime(timezone=True))
-    pdf_url = db.Column(db.String, nullable=False)
+    pdf_url = db.Column(db.String)
     ticket_id = db.Column(db.Integer, db.ForeignKey('tickets.id', ondelete='CASCADE'))
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id', ondelete='CASCADE'))
     order = db.relationship('Order', backref='ticket_holders')
@@ -108,10 +108,7 @@ class TicketHolder(db.Model):
         return '<TicketHolder %r>' % self.id
 
     def __str__(self):
-        return '<TicketHolder %r>' % self.id
-
-    def __unicode__(self):
-        return '<TicketHolder %r>' % self.id
+        return self.__repr__()
 
     @property
     def name(self):
@@ -136,7 +133,7 @@ class TicketHolder(db.Model):
 
         buffer = StringIO()
         img.save(buffer, format="JPEG")
-        img_str = base64.b64encode(buffer.getvalue())
+        img_str = str(base64.b64encode(buffer.getvalue()), 'utf-8')
         return img_str
 
     @property

@@ -92,10 +92,7 @@ class Speaker(db.Model):
         return '<Speaker %r>' % self.name
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.name
+        return self.__repr__()
 
     def __setattr__(self, name, value):
         if name == 'short_biography' or name == 'long_biography' or name == 'speaking_experience' or name == 'sponsorship_required':

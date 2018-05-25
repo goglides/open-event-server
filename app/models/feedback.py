@@ -22,10 +22,7 @@ class Feedback(db.Model):
         return '<Feedback %r>' % self.rating
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.rating
+        return self.__repr__()
 
     @property
     def serialize(self):

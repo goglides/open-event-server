@@ -1,7 +1,9 @@
-from datetime import datetime, timedelta
-import pytz
-from app.models import db
 import random
+from datetime import datetime, timedelta
+
+import pytz
+
+from app.models import db
 
 
 def generate_hash():
@@ -46,9 +48,4 @@ class RoleInvite(db.Model):
                                           self.role_id,)
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return 'Invite for %r:%r:%r' % (self.email,
-                                        self.event_id,
-                                        self.role_id)
+        return self.__repr__()

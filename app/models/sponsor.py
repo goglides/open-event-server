@@ -1,5 +1,5 @@
-from app.models.helpers.versioning import clean_up_string, clean_html
 from app.models import db
+from app.models.helpers.versioning import clean_up_string, clean_html
 
 
 class Sponsor(db.Model):
@@ -33,10 +33,7 @@ class Sponsor(db.Model):
         return '<Sponsor %r>' % self.name
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.name
+        return self.__repr__()
 
     def __setattr__(self, name, value):
         if name == 'description':

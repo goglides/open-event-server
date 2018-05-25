@@ -5,8 +5,10 @@ from marshmallow_jsonapi.flask import Schema, Relationship
 from app.api.helpers.exceptions import UnprocessableEntity
 from app.api.helpers.utilities import dasherize
 from app.models.ticket import Ticket
+from utils.common import use_defaults
 
 
+@use_defaults()
 class TicketSchemaPublic(Schema):
     class Meta:
         type_ = 'ticket'
@@ -105,6 +107,11 @@ class TicketSchema(TicketSchemaPublic):
             if data['quantity'] < data['min_order']:
                 raise UnprocessableEntity({'pointer': '/data/attributes/quantity'},
                                           "quantity should be greater than min-order")
+
+        if 'quantity' in data and 'max_order' in data:
+            if data['quantity'] < data['max_order']:
+                raise UnprocessableEntity({'pointer': '/data/attributes/quantity'},
+                                          "quantity should be lesser than max-order")
 
     access_codes = Relationship(attribute='access_codes',
                                 self_view='v1.ticket_access_code',

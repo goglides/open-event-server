@@ -97,10 +97,7 @@ class Order(db.Model):
         return '<Order %r>' % self.id
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
-
-    def __unicode__(self):
-        return self.identifier
+        return str(self.identifier)
 
     def get_invoice_number(self):
         return 'O' + str(int(time.mktime(self.created_at.timetuple()))) + '-' + str(self.id)
