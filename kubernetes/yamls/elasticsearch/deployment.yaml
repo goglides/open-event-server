@@ -14,9 +14,8 @@ spec:
     spec:
       volumes:
       - name: es-data
-        gcePersistentDisk:
-          pdName: es-data-disk-primary
-          fsType: ext4
+        persistentVolumeClaim:
+          claimName: elasticsearch
       serviceAccount: elasticsearch
       containers:
       initContainers:

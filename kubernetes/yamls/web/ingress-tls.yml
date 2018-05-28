@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - api.eventyay.com
+    - eventsapi.goglides.com
     secretName: eventyay-api-tls
   rules:
-  - host: api.eventyay.com
+  - host: eventsapi.goglides.com
     http:
       paths:
       - path: /
