@@ -18,12 +18,12 @@ spec:
         emptyDir: {}
       containers:
       - name: api-server
-        image: eventyay/nextgen-api-server:latest
+        image: bkpandey/open-event-server:development
         command: ["/bin/sh","-c"]
         args: ["./kubernetes/run.sh"]
         livenessProbe:
           httpGet:
-            path: /health-check/
+            path: /
             port: 8080
           initialDelaySeconds: 30
           timeoutSeconds: 3
